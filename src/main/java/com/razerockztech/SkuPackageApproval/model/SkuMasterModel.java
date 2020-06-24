@@ -30,40 +30,46 @@ public class SkuMasterModel {
     private String itemDesc;
 
     @Column(name = "size")
-    private Double size;
-
-    @Column(name = "gsm")
-    private String gsm;
-
-    @Column(name = "gsf")
-    private String gsf;
-
-    @Column(name = "item_type")
-    private String itemType;
+    private String size;
 
     @Column(name = "color")
     private String color;
 
-    @Column(name = "net_weight")
-    private Double netWeight;
+    @Column(name = "net_weight_item")
+    private Double netWeightItem;
+
+    @Column(name = "gr_weight_item")
+    private Double grWeightItem;
 
     @Column(name = "tolerance")
     private Double tolerance;
 
-    @Column(name = "gr_weight")
-    private String grWeight;
+    @Column(name = "order_qty")
+    private Long orderQty;
 
-    @Column(name = "usa")
-    private String usa;
+    @Column(name = "qty_per_ctn")
+    private Long qtyPerCtn;
 
-    @Column(name = "europe")
-    private String europe;
+    @Column(name = "fold_size")
+    private String foldSize;
 
-    @Column(name = "ip")
-    private String ip;
+    @Column(name = "ctn_length")
+    private Double ctnLength;
 
-    @Column(name = "mp")
-    private String mp;
+    @Column(name = "ctn_width")
+    private Double ctnWidth;
+
+    @Column(name = "ctn_height")
+    private double ctnHeight;
+
+    @Column(name = "cbm_ctn")
+    private Double cbmCtn;
+
+    @Column(name = "net_weight_ctn")
+    private Double netWeightCtn;
+
+    @Column(name = "gr_weight_ctn")
+    private Double grWeightCtn;
 
     @Column(name = "package_accessories")
     private String packAccess;
