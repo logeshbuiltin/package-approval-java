@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.print.Pageable;
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-//@CrossOrigin(origins = "https://package-approval.web.app", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins = "https://package-approval.web.app", maxAge = 3600)
 @RestController
 public class SkuMasterController {
     @Autowired
