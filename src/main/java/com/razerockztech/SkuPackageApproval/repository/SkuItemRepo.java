@@ -1,5 +1,6 @@
 package com.razerockztech.SkuPackageApproval.repository;
 
+import com.razerockztech.SkuPackageApproval.dto.ItemCtnDto;
 import com.razerockztech.SkuPackageApproval.model.SkuItemModel;
 import com.razerockztech.SkuPackageApproval.model.SkuMasterModel;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +22,9 @@ public interface SkuItemRepo extends JpaRepository<SkuItemModel, String> {
 
     @Query(
             "select DISTINCT ctnNo from SkuItemModel t where t.itemSku=:itemSku")
-    List<Integer> getAllCtnNo(@Param("itemSku") String itemSku);
+    List<Integer> getAllCtnNoSku(@Param("itemSku") String itemSku);
+
+    @Query(
+            "select DISTINCT itemSku, ctnNo, sum(netWeight), sum(tolerance) from SkuItemModel t group by t.itemSku, t.ctnNo")
+    List<Object[]> getAllCtnNo();
 }
