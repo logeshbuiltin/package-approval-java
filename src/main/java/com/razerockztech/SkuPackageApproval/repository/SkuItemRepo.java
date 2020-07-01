@@ -21,10 +21,24 @@ public interface SkuItemRepo extends JpaRepository<SkuItemModel, String> {
     List<SkuItemModel> getOrderListByObject(@Param("itemSku") String itemSku);
 
     @Query(
+            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.itemSku=:itemSku and t.status!='shipped'" +
+                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
+    List<Object[]> getCtnNoByGroup(@Param("itemSku") String itemSku);
+
+    @Query(
+            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.status!='shipped'" +
+                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
+    List<Object[]> getAllCtnNoByGroup(@Param("itemSku") String itemSku);
+
+    @Query(
+            "select DISTINCT t from SkuItemModel t where t.itemSku=:itemSku and t.ctnNo=:ctnNo")
+    List<SkuItemModel> getItemBySkuCtn(@Param("itemSku") String itemSku, @Param("ctnNo") Integer ctnNo);
+
+    @Query(
             "select DISTINCT ctnNo from SkuItemModel t where t.itemSku=:itemSku")
     List<Integer> getAllCtnNoSku(@Param("itemSku") String itemSku);
 
     @Query(
-            "select DISTINCT itemSku, ctnNo, sum(netWeight), sum(tolerance) from SkuItemModel t group by t.itemSku, t.ctnNo")
+            "select DISTINCT itemSku, ctnNo, sum(netWeight), sum(tolerance) from SkuItemModel t where t.status='shipped' group by t.itemSku, t.ctnNo")
     List<Object[]> getAllCtnNo();
 }

@@ -2,6 +2,7 @@ package com.razerockztech.SkuPackageApproval.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.razerockztech.SkuPackageApproval.dto.ItemCtnDto;
+import com.razerockztech.SkuPackageApproval.dto.ItemCtnSkuDto;
 import com.razerockztech.SkuPackageApproval.exception.ResourceNotFoundException;
 import com.razerockztech.SkuPackageApproval.model.SkuItemModel;
 import com.razerockztech.SkuPackageApproval.model.SkuMasterModel;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Pageable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
@@ -29,10 +27,36 @@ public class SkuItemController {
     @Autowired
     private SkuMasterRepo skuMasterRepo;
 
+    HashMap<String, String> returnMap = new HashMap<>();
+
 
     @GetMapping("/getitem/{itemSku}")
     public List<SkuItemModel> getItemBySku(@PathVariable String itemSku) {
         return skuItemRepo.getOrderListByObject(itemSku);
+    }
+
+    @GetMapping("/getitemgroup/{itemSku}")
+    public List<ItemCtnSkuDto> getItemGroupBySku(@PathVariable String itemSku) {
+        List<Object[]> itemObjectList = new ArrayList<>();
+        if(!itemSku.equals("null")) {
+            itemObjectList = skuItemRepo.getCtnNoByGroup(itemSku);
+        } else {
+            itemObjectList = skuItemRepo.getAllCtnNoByGroup(itemSku);
+        }
+        List<ItemCtnSkuDto> itemCtnSkuDtos = new ArrayList<>();
+        for(Object[] sku: itemObjectList) {
+            ItemCtnSkuDto itemCtnSkuDto = new ItemCtnSkuDto();
+            itemCtnSkuDto.setSkuNo(sku[0].toString());
+            itemCtnSkuDto.setAsnNo(sku[1].toString());
+            itemCtnSkuDto.setItemDesc(sku[2].toString());
+            itemCtnSkuDto.setColor(sku[3].toString());
+            itemCtnSkuDto.setCtnCount(Integer.parseInt(sku[4].toString()));
+            itemCtnSkuDto.setNetWeight(Double.parseDouble(sku[5].toString()));
+            itemCtnSkuDto.setTolerance(Double.parseDouble(sku[6].toString()));
+            itemCtnSkuDto.setCtnCount(Integer.parseInt(sku[7].toString()));
+            itemCtnSkuDtos.add(itemCtnSkuDto);
+        }
+        return itemCtnSkuDtos;
     }
 
     @GetMapping("/getctnno/{itemSku}")
@@ -72,6 +96,23 @@ public class SkuItemController {
             });
             return skuItemRepo.saveAll(skuItemModelList);
         }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + skuNo));*/
+    }
+
+    @PutMapping("/putitemsku/{skuNo}")
+    public Map<String, String> updateShippedSku(@PathVariable String skuNo, @RequestBody List<ItemCtnSkuDto> itemCtnSkuDtoList) {
+        try{
+            for(ItemCtnSkuDto item: itemCtnSkuDtoList) {
+                List<SkuItemModel> skuItemModels = skuItemRepo.getItemBySkuCtn(item.getSkuNo(), item.getCtnNo());
+                for(SkuItemModel skuItemModel: skuItemModels) {
+                    skuItemModel.setStatus("shipped");
+                    skuItemRepo.save(skuItemModel);
+                }
+            }
+            returnMap.put("status", "success");
+        } catch (Exception e) {
+            returnMap.put("status", "error");
+        }
+        return returnMap;
     }
 
 }
