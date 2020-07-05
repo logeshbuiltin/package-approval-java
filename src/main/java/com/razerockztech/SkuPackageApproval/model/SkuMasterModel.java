@@ -76,4 +76,8 @@ public class SkuMasterModel {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "buyer")
+    private String buyer;
+
 }

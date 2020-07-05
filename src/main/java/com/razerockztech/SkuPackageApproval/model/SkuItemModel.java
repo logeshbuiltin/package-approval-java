@@ -51,4 +51,10 @@ public class SkuItemModel {
     @Column(name = "item_sku")
     private String itemSku;
 
+    @Column(name = "ship_date")
+    private Date shipDate;
+
+    @Column(name = "buyer")
+    private String buyer;
+
 }

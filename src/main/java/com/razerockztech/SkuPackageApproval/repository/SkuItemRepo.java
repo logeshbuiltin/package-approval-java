@@ -21,9 +21,18 @@ public interface SkuItemRepo extends JpaRepository<SkuItemModel, String> {
     List<SkuItemModel> getOrderListByObject(@Param("itemSku") String itemSku);
 
     @Query(
+            "select DISTINCT buyer from SkuItemModel t")
+    List<String> getBuyerList();
+
+    @Query(
             "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.itemSku=:itemSku and t.status!='shipped'" +
                     "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
     List<Object[]> getCtnNoByGroup(@Param("itemSku") String itemSku);
+
+    @Query(
+            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.buyer=:buyer and t.status!='shipped'" +
+                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
+    List<Object[]> getCtnNoByBuyer(@Param("buyer") String buyer);
 
     @Query(
             "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.status!='shipped'" +

@@ -16,8 +16,8 @@ import java.awt.print.Pageable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-@CrossOrigin(origins = "https://package-approval.web.app", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//@CrossOrigin(origins = "https://package-approval.web.app", maxAge = 3600)
 @RestController
 public class SkuItemController {
 
@@ -35,6 +35,11 @@ public class SkuItemController {
         return skuItemRepo.getOrderListByObject(itemSku);
     }
 
+    @GetMapping("/getallbuyer")
+    public List<String> getBuyerList() {
+        return skuItemRepo.getBuyerList();
+    }
+
     @GetMapping("/getitemgroup/{itemSku}")
     public List<ItemCtnSkuDto> getItemGroupBySku(@PathVariable String itemSku) {
         List<Object[]> itemObjectList = new ArrayList<>();
@@ -50,7 +55,31 @@ public class SkuItemController {
             itemCtnSkuDto.setAsnNo(sku[1].toString());
             itemCtnSkuDto.setItemDesc(sku[2].toString());
             itemCtnSkuDto.setColor(sku[3].toString());
-            itemCtnSkuDto.setCtnCount(Integer.parseInt(sku[4].toString()));
+            itemCtnSkuDto.setCtnNo(Integer.parseInt(sku[4].toString()));
+            itemCtnSkuDto.setNetWeight(Double.parseDouble(sku[5].toString()));
+            itemCtnSkuDto.setTolerance(Double.parseDouble(sku[6].toString()));
+            itemCtnSkuDto.setCtnCount(Integer.parseInt(sku[7].toString()));
+            itemCtnSkuDtos.add(itemCtnSkuDto);
+        }
+        return itemCtnSkuDtos;
+    }
+
+    @GetMapping("/getitembuyer/{buyer}")
+    public List<ItemCtnSkuDto> getItemGroupByBuyer(@PathVariable String buyer) {
+        List<Object[]> itemObjectList = new ArrayList<>();
+        if(!buyer.equals("null")) {
+            itemObjectList = skuItemRepo.getCtnNoByBuyer(buyer);
+        } else {
+            itemObjectList = skuItemRepo.getCtnNoByBuyer(buyer);
+        }
+        List<ItemCtnSkuDto> itemCtnSkuDtos = new ArrayList<>();
+        for(Object[] sku: itemObjectList) {
+            ItemCtnSkuDto itemCtnSkuDto = new ItemCtnSkuDto();
+            itemCtnSkuDto.setSkuNo(sku[0].toString());
+            itemCtnSkuDto.setAsnNo(sku[1].toString());
+            itemCtnSkuDto.setItemDesc(sku[2].toString());
+            itemCtnSkuDto.setColor(sku[3].toString());
+            itemCtnSkuDto.setCtnNo(Integer.parseInt(sku[4].toString()));
             itemCtnSkuDto.setNetWeight(Double.parseDouble(sku[5].toString()));
             itemCtnSkuDto.setTolerance(Double.parseDouble(sku[6].toString()));
             itemCtnSkuDto.setCtnCount(Integer.parseInt(sku[7].toString()));
@@ -90,21 +119,16 @@ public class SkuItemController {
             skuItem.setSkuNo(skuMasterModel);
         });
         return skuItemRepo.saveAll(skuItemModelList);
-        /*return skuMasterRepo.findById(skuNo).map(master -> {
-            skuItemModelList.forEach(skuItem -> {
-                skuItem.setSkuNo(master);
-            });
-            return skuItemRepo.saveAll(skuItemModelList);
-        }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + skuNo));*/
     }
 
-    @PutMapping("/putitemsku/{skuNo}")
-    public Map<String, String> updateShippedSku(@PathVariable String skuNo, @RequestBody List<ItemCtnSkuDto> itemCtnSkuDtoList) {
+    @PutMapping("/putitemsku/{buyer}")
+    public Map<String, String> updateShippedSku(@PathVariable String buyer, @RequestBody List<ItemCtnSkuDto> itemCtnSkuDtoList) {
         try{
             for(ItemCtnSkuDto item: itemCtnSkuDtoList) {
                 List<SkuItemModel> skuItemModels = skuItemRepo.getItemBySkuCtn(item.getSkuNo(), item.getCtnNo());
                 for(SkuItemModel skuItemModel: skuItemModels) {
                     skuItemModel.setStatus("shipped");
+                    skuItemModel.setShipDate(new Date());
                     skuItemRepo.save(skuItemModel);
                 }
             }
