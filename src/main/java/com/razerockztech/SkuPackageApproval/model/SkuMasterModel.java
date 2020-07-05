@@ -80,4 +80,13 @@ public class SkuMasterModel {
     @Column(name = "buyer")
     private String buyer;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "picByte", length = 1000)
+    private byte[] picByte;
+
 }
