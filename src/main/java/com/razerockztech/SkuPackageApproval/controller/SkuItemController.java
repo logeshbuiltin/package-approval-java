@@ -83,6 +83,7 @@ public class SkuItemController {
             itemCtnSkuDto.setNetWeight(Double.parseDouble(sku[5].toString()));
             itemCtnSkuDto.setTolerance(Double.parseDouble(sku[6].toString()));
             itemCtnSkuDto.setCtnCount(Integer.parseInt(sku[7].toString()));
+            itemCtnSkuDto.setCbm(Double.parseDouble(sku[8].toString()));
             itemCtnSkuDtos.add(itemCtnSkuDto);
         }
         return itemCtnSkuDtos;

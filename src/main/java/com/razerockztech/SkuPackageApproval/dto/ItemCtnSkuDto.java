@@ -73,4 +73,14 @@ public class ItemCtnSkuDto {
     private Double netWeight;
     private Double tolerance;
     private Integer ctnCount;
+
+    public Double getCbm() {
+        return cbm;
+    }
+
+    public void setCbm(Double cbm) {
+        this.cbm = cbm;
+    }
+
+    private Double cbm;
 }

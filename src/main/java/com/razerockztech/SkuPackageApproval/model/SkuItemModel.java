@@ -57,4 +57,7 @@ public class SkuItemModel {
     @Column(name = "buyer")
     private String buyer;
 
+    @Column(name = "cbm")
+    private Double cbm;
+
 }

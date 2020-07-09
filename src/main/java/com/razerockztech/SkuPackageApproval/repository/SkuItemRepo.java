@@ -25,18 +25,18 @@ public interface SkuItemRepo extends JpaRepository<SkuItemModel, String> {
     List<String> getBuyerList();
 
     @Query(
-            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.itemSku=:itemSku and t.status!='shipped'" +
-                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
+            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id), cbm from SkuItemModel t where t.itemSku=:itemSku and t.status!='shipped'" +
+                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo, t.cbm")
     List<Object[]> getCtnNoByGroup(@Param("itemSku") String itemSku);
 
     @Query(
-            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.buyer=:buyer and t.status!='shipped'" +
-                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
+            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id), cbm from SkuItemModel t where t.buyer=:buyer and t.status!='shipped'" +
+                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo, t.cbm")
     List<Object[]> getCtnNoByBuyer(@Param("buyer") String buyer);
 
     @Query(
-            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id) from SkuItemModel t where t.status!='shipped'" +
-                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo")
+            "select DISTINCT itemSku, asnNo, itemDesc, color, ctnNo, sum(netWeight), sum(tolerance), COUNT(id), cbm from SkuItemModel t where t.status!='shipped'" +
+                    "group by t.itemSku, t.asnNo, t.itemDesc, t.color, t.ctnNo, t.cbm")
     List<Object[]> getAllCtnNoByGroup(@Param("itemSku") String itemSku);
 
     @Query(
