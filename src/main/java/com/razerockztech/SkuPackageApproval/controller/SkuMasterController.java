@@ -94,13 +94,17 @@ public class SkuMasterController {
     @PostMapping("/uploadimage/{skuNo}")
     public Map<String, String> uplaodImage(@PathVariable String skuNo, @RequestParam("imageFile") MultipartFile file) throws IOException {
         SkuMasterModel skuMasterModel = skuMasterRepo.getOrderByObject(skuNo);
-        skuMasterModel.setName(file.getOriginalFilename());
-        skuMasterModel.setType(file.getContentType());
-        skuMasterModel.setPicByte(compressBytes(file.getBytes()));
-        try {
-            skuMasterRepo.save(skuMasterModel);
-            returnMap.put("status", "success");
-        } catch (Exception e) {
+        if(skuMasterModel != null) {
+            skuMasterModel.setName(file.getOriginalFilename());
+            skuMasterModel.setType(file.getContentType());
+            skuMasterModel.setPicByte(compressBytes(file.getBytes()));
+            try {
+                skuMasterRepo.save(skuMasterModel);
+                returnMap.put("status", "success");
+            } catch (Exception e) {
+                returnMap.put("status", "error");
+            }
+        } else {
             returnMap.put("status", "error");
         }
         return returnMap;
