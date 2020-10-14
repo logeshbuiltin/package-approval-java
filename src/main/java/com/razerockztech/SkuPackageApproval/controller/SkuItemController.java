@@ -32,7 +32,7 @@ public class SkuItemController {
 
     @GetMapping("/getallbuyer")
     public List<String> getBuyerList() {
-        return skuItemRepo.getBuyerList();
+        return skuMasterRepo.getBuyerList();
     }
 
     @GetMapping("/getitemgroup/{itemSku}")

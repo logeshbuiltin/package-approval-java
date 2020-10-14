@@ -23,6 +23,10 @@ public interface SkuMasterRepo extends JpaRepository<SkuMasterModel, String> {
             "select DISTINCT skuNo from SkuMasterModel t")
     List<String> getAllSkuNo();
 
+    @Query(
+            "select DISTINCT buyer from SkuMasterModel t")
+    List<String> getBuyerList();
+
     @Transactional
     @Modifying
     @Query(
