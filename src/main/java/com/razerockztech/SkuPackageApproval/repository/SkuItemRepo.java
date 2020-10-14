@@ -4,9 +4,11 @@ import com.razerockztech.SkuPackageApproval.dto.ItemCtnDto;
 import com.razerockztech.SkuPackageApproval.model.SkuItemModel;
 import com.razerockztech.SkuPackageApproval.model.SkuMasterModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,4 +52,10 @@ public interface SkuItemRepo extends JpaRepository<SkuItemModel, String> {
     @Query(
             "select DISTINCT itemSku, ctnNo, sum(netWeight), sum(tolerance) from SkuItemModel t where t.status='shipped' group by t.itemSku, t.ctnNo")
     List<Object[]> getAllCtnNo();
+
+    @Transactional
+    @Modifying
+    @Query(
+            "delete from SkuItemModel t where t.itemSku=:itemSku")
+    void deleteItemSkuNo(@Param("itemSku") String skuNo);
 }

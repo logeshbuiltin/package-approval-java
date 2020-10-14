@@ -1,18 +1,15 @@
 package com.razerockztech.SkuPackageApproval.controller;
 
 import com.razerockztech.SkuPackageApproval.dto.ImageModelDto;
-import com.razerockztech.SkuPackageApproval.model.SkuItemModel;
 import com.razerockztech.SkuPackageApproval.model.SkuMasterModel;
 import com.razerockztech.SkuPackageApproval.repository.SkuMasterRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.Pageable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -21,7 +18,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 //@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-@CrossOrigin(origins = "https://package-approval.web.app", maxAge = 3600)
+//@CrossOrigin(origins = "https://package-approval.web.app", maxAge = 3600)
 @RestController
 public class SkuMasterController {
     @Autowired
@@ -33,6 +30,13 @@ public class SkuMasterController {
     public List<String> getSkuList() {
         List<String> skuNoList = skuMasterRepo.getAllSkuNo();
         return skuNoList;
+    }
+
+    @GetMapping("/getPagedskuNo/{pageNo}/{pageSize}")
+    public List<SkuMasterModel> getSkuPagedList(@PathVariable int pageNo, @PathVariable int pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<SkuMasterModel> pagedResult =  skuMasterRepo.findAll(paging);
+        return pagedResult.toList();
     }
 
     @GetMapping("/getskuData/{skuNo}")
